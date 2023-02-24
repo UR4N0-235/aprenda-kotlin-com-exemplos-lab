@@ -1,21 +1,70 @@
-// [Template no Kotlin Playground](https://pl.kotl.in/WcteahpyN)
-
 enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
 
-class Usuario
+class Usuario(val nome: String)
 
 data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>, val nivel: Nivel) {
 
     val inscritos = mutableListOf<Usuario>()
     
     fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+       	inscritos.add(usuario)
     }
+    
+    fun matricular(usuarios: List<Usuario>) {
+       	for(usuario in usuarios){
+	        inscritos.add(usuario)
+        }
+    }
+    
+    fun cargaHorariaTotal(): Int{
+    	var horas: Int = 0
+        for(conteudo in conteudos){
+			horas += conteudo.duracao
+		}
+        return horas
+    }
+    
+    fun conteudos() {
+    	for(conteudo in conteudos){
+        	println("${conteudo.nome} - ${conteudo.duracao}h")
+        }
+    }
+    
+    fun mostrarInscritos(){
+    	for(inscrito in inscritos){
+        	println("${inscrito.nome}")
+        }
+	}
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    cenario1()
+}
+
+fun cenario1(){
+	val almeida = Usuario("Almeida")
+    val anderson = Usuario("Anderson")
+    
+    val listaConteudosKotlin: List<ConteudoEducacional> = listOf(
+        ConteudoEducacional("Introdução ao Desenvolvimento Moderno de Software",5),
+        ConteudoEducacional("Funcoes em Kotlin",2),
+        ConteudoEducacional("Orientação a Objetos - POO",6),
+    	ConteudoEducacional("Arquiteturas e Organizações Computacionais",10))
+
+    val kotlinExperience = Formacao("Kotlin Experience", listaConteudosKotlin, Nivel.BASICO)
+
+    kotlinExperience?.let{
+        kotlinExperience.matricular(listOf(almeida, anderson))
+    }
+
+    println("Formação: ${kotlinExperience.nome} - ${kotlinExperience.cargaHorariaTotal()} horas de estudo")
+    
+    println("\nConteúdos:")
+    kotlinExperience.conteudos()
+    
+    println("\nInscritos:")
+    kotlinExperience.mostrarInscritos()
+
 }
